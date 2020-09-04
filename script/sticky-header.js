@@ -47,7 +47,6 @@ export default class StickyHeader extends Plugin {
             'FlyoutMenu',
             '[data-flyout-menu="true"]',
             {}
-
         )
     }
 
