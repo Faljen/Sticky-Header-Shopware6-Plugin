@@ -2,16 +2,25 @@ import Plugin from 'src/plugin-system/plugin.class';
 
 export default class StickyHeader extends Plugin {
 
+    static options =
+        {
+            clonedElementClass: 'js-sticky-header',
+            scrollPositionValue: 100
+
+        }
+
     init() {
         console.log('Welcome in the Sticky-Header Plugin! :)');
+        this.PluginManager = window.PluginManager;
         this.createElement();
         this.addEventListeners();
+        this.reinitializePlugin();
     }
 
     createElement() {
         this.copiedNavigation = this.el.cloneNode(true);
         this.copiedNavigation.removeAttribute('id');
-        this.copiedNavigation.classList.add('js-sticky-header');
+        this.copiedNavigation.classList.add(this.options.clonedElementClass);
         document.body.appendChild(this.copiedNavigation);
     }
 
@@ -23,12 +32,22 @@ export default class StickyHeader extends Plugin {
     onScroll() {
         const scrollPosition = document.documentElement.scrollTop;
 
-        if (scrollPosition > 100) {
-            this.copiedNavigation.classList.add('is--active');
+        if (scrollPosition > this.options.scrollPositionValue) {
+            if (!this.copiedNavigation.classList.contains('is--active')) {
+                this.copiedNavigation.classList.add('is--active');
+            }
         } else {
             this.copiedNavigation.classList.remove('is--active');
         }
 
+    }
+
+    reinitializePlugin() {
+        this.PluginManager.initializePlugin(
+            'FlyoutMenu',
+            '[data-flyout-menu="true"]',
+            {}
+        )
     }
 
 }
